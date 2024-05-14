@@ -58,4 +58,12 @@ export class ArticleController {
   deleteArticle(@Param('id', ParseIntPipe) id: number) {
     return this.articleService.deleteArticle(id);
   }
+
+  // BPO - 05/14/2024 - Recherche des articles par auteur
+  // J'ai du modifier la route parce qu'elle était en commun avec celle de l'id
+  // et le fait de demander un string bugait car le syst voulait un int (de l'id)
+  @Get('/by-author/:author')
+  getArticlesByAuthor(@Param('author') author: string) {
+    return this.articleService.getArticlesByAuthor(author);
+  }
 }

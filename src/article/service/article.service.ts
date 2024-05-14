@@ -46,4 +46,9 @@ export class ArticleService {
   async deleteArticle(id: number) {
     return await this.articleRepository.delete(id);
   }
+
+  // BPO - 05/14/2024 - Recherche des articles par auteur
+  async getArticlesByAuthor(author: string) {
+    return await this.articleRepository.findBy({'author': author } );
+  }
 }

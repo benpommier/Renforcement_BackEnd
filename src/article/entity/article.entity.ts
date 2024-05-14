@@ -7,11 +7,11 @@ export class Article {
 
   @Column({ type: 'varchar' })
   title: string;
-
+  
   // Ajoutez dans la table article deux nouvelles propriétés : content et author. Ce sont des chaines de caractères
   @Column({ type: 'text' })
   content: string;
 
   @Column({ type: 'text' })
-  autor: string;
+  author: string;
 }
