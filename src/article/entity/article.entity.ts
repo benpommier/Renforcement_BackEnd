@@ -12,6 +12,6 @@ export class Article {
   @Column({ type: 'text' })
   content: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   author: string;
 }
