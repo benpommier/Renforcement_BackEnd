@@ -20,6 +20,7 @@ import { PasswordHasherServiceInterface } from './utils/password-hasher.service.
         },
         inject: [SodiumPasswordHasherService],
       },
+      SodiumPasswordHasherService
 ]
 })
 export class UserModule {}
