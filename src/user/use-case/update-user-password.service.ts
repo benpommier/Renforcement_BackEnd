@@ -2,13 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../entity/user.entity';
-import { UserCreateDto } from '../dto/user-create.dto';
+import { UserUpdateDto } from '../dto/user-update.dto';
+import { UserUpdatePasswordDto } from '../dto/user-update-password.dto';
 import { BcryptPasswordHasherService } from '../utils/bcrypt-password-hasher.service';
-import { PasswordHasherServiceInterface } from '../utils/password-hasher.service.interface';
 
-//BPO - 05/15/2024 - TP - Creer un nouvel utilisateur
+//BPO - 05/15/2024 - TP - API REST
 Injectable();
-export class CreateUserService {
+export class UpdateUserPasswordService {
 
     constructor(
         @InjectRepository(User)
@@ -16,13 +16,13 @@ export class CreateUserService {
         private readonly bcryptPasswordHasherService: BcryptPasswordHasherService
       ) {}
       
-      async createUser(data: UserCreateDto) {
+      async updateUserPassword(id: number, data: UserUpdatePasswordDto) {
+        const user = await this.userRepository.findOneBy({ id });
         data.password = await this.bcryptPasswordHasherService.passwordHasher(data.password);
-        try {
-          return this.userRepository.save(data);
-        } catch (error) {
-          console.log(error);
-          throw new Error('Error while creating article');
-        }
+        const userUpdate = { ...user, ...data };
+        // on sauvegarde l'user mis à jour
+        await this.userRepository.save(userUpdate);
+    
+        return userUpdate;
       }
 }
