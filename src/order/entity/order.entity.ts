@@ -19,6 +19,15 @@ export class Order {
         }
       }
       
+      //BPO - 05/16/2024 - TP - Orienté Objet (payer une order)
+      async updateOrderByPaying() {
+        // on récupère l'article ciblé
+    
+        this.paidAt = new Date();
+        this.updatedAt = new Date();
+        this.status = 'payé';
+      }
+
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -33,10 +42,13 @@ export class Order {
 
   @Column({ type: 'json' })
   items: string[];
-// Nullable non essentiel car j'ai deja des items dans ma base
+    // Nullable non essentiel car j'ai deja des items dans ma base
   @Column({ type: 'varchar' , nullable:true })
   status: string;
 
   @Column({ type: 'int' , nullable:true  })
   total: number;
+
+  @Column({ type: 'date' , nullable:true })
+  paidAt: Date;
 }
