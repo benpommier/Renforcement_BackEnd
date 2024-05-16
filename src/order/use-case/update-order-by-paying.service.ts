@@ -15,7 +15,7 @@ export class UpdateOrderByPayingService {
       async updateOrderByPaying(id: number) {
         const order = await this.orderRepository.findOneBy({ id });
 
-        order.updateOrderByPaying();
+        order.Pay();
         await this.orderRepository.save(order);
     
         return order;

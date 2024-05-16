@@ -20,7 +20,7 @@ export class Order {
       }
       
       //BPO - 05/16/2024 - TP - Orienté Objet (payer une order)
-      async updateOrderByPaying() {
+        Pay() {
         // on récupère l'article ciblé
     
         this.paidAt = new Date();
