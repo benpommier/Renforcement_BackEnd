@@ -15,7 +15,7 @@ export class ModifyShippingInOrderService {
       async modifyShippingInOrder(id: number, data: OrderModifyShippingDto) {
         const order = await this.orderRepository.findOneBy({ id });
         
-        order.ModifyShippingInOrder(data);
+        order.modifyShippingInOrder(data);
         await this.orderRepository.save(order);
         
         return order;

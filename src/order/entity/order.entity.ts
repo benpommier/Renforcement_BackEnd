@@ -30,14 +30,14 @@ export class Order {
         this.status = 'payé';
       }
 
-      ModifyInvoiceInOrder(orderModifyInvoiceDto: OrderModifyInvoiceDto) {
+      modifyInvoiceInOrder(orderModifyInvoiceDto: OrderModifyInvoiceDto) {
         this.invoiceAdress = orderModifyInvoiceDto.invoiceAdress;
         this.invoiceAdressSetAt = new Date();
         this.status = 'En cours - Adresse de facturation validée';
         this.updatedAt = new Date();
       }
 
-      ModifyShippingInOrder(orderModifyShippingDto: OrderModifyShippingDto) {
+      modifyShippingInOrder(orderModifyShippingDto: OrderModifyShippingDto) {
         this.shippingAdress = orderModifyShippingDto.shippingAdress;
         this.shippingMethod = orderModifyShippingDto.shippingMethod;
         this.status = 'En cours - En attente de livraison';

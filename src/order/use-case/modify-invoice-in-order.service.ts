@@ -15,7 +15,7 @@ export class ModifyInvoiceInOrderService {
       async modifyInvoiceInOrder(id: number, data: OrderModifyInvoiceDto) {
         const order = await this.orderRepository.findOneBy({ id });
         
-        order.ModifyInvoiceInOrder(data);
+        order.modifyInvoiceInOrder(data);
         await this.orderRepository.save(order);
         
         return order;
