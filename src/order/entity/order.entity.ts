@@ -52,7 +52,7 @@ export class Order {
   
     private getOrderItemWithProduct(product: string): OrderItem {
       return this.items.find((item) => {
-        item.product === product;
+        return item.product === product;
       });
     }
 
