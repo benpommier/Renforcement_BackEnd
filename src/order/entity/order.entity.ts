@@ -1,30 +1,63 @@
 import { IsNumber } from 'class-validator';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { OrderCreateDto } from '../dto/order-create.dto';
 import { OrderModifyShippingDto } from '../dto/order-modify-shipping.dto';
 import { OrderModifyInvoiceDto } from '../dto/order-modify-invoice.dto';
+import { OrderItem } from './orderItem.entity';
 
 //BPO - 05/16/2024 - TP - Creer un nouvel order
 @Entity()
 export class Order {
+
+    static CartStatus = {
+        Cart: 'Cart',
+        Paid: 'Paid',
+        ShippingSet: 'ShippingSet',
+        InvoiceSet: 'InvoiceSet',
+    }
+
+
+    //BPO - 05/17/2024 - TP - Création d'order Item
     constructor(orderCreateDto?: OrderCreateDto) {
-        if (orderCreateDto) {
-          if (orderCreateDto.items.length > 3) {
-            throw new Error('Vous ne pouvez pas avoir plus de 3 produits dans votre commande');
-          }
-          this.createdAt = new Date();
-          this.updatedAt = new Date();
-          this.customer = orderCreateDto.customer;
-          this.items = orderCreateDto.items;
-          this.status = 'En cours';
-          this.total = 10 * orderCreateDto.items.length;
+      if (orderCreateDto) {
+        if (orderCreateDto.items.length > 3) {
+          throw new Error("trop d'items");
         }
+  
+        this.items = this.createOrderItems(orderCreateDto);
+        this.createdAt = new Date();
+        this.updatedAt = new Date();
+        this.customer = 'tetetete';
+        this.paidAt = null;
+        this.status = Order.CartStatus.Cart;
+        this.total = 10 * orderCreateDto.items.length;
       }
-      
+    }
+  
+    private createOrderItems(orderCreateDto: OrderCreateDto): OrderItem[] {
+      const orderItemsToCreate = [];
+  
+      orderCreateDto.items.map((product) => {
+        const existingOrderItem = this.getOrderItemWithProduct(product);
+        if (existingOrderItem) {
+          existingOrderItem.incrementQuantity();
+        } else {
+          const newOrderItem = new OrderItem(product);
+          orderItemsToCreate.push(newOrderItem);
+        }
+      });
+  
+      return orderItemsToCreate;
+    }
+  
+    private getOrderItemWithProduct(product: string): OrderItem {
+      return this.items.find((item) => {
+        item.product === product;
+      });
+    }
+
       //BPO - 05/16/2024 - TP - Orienté Objet (payer une order)
-        Pay() {
-        // on récupère l'article ciblé
-    
+        Pay() {    
         this.paidAt = new Date();
         this.updatedAt = new Date();
         this.status = 'payé';
@@ -33,14 +66,14 @@ export class Order {
       modifyInvoiceInOrder(orderModifyInvoiceDto: OrderModifyInvoiceDto) {
         this.invoiceAdress = orderModifyInvoiceDto.invoiceAdress;
         this.invoiceAdressSetAt = new Date();
-        this.status = 'En cours - Adresse de facturation validée';
+        this.status = Order.CartStatus.InvoiceSet;
         this.updatedAt = new Date();
       }
 
       modifyShippingInOrder(orderModifyShippingDto: OrderModifyShippingDto) {
         this.shippingAdress = orderModifyShippingDto.shippingAdress;
         this.shippingMethod = orderModifyShippingDto.shippingMethod;
-        this.status = 'En cours - En attente de livraison';
+        this.status = Order.CartStatus.ShippingSet;
         this.updatedAt = new Date();
         this.shippingMethodSetAt = new Date();
         if (this.invoiceAdress == null) {
@@ -61,8 +94,12 @@ export class Order {
   @Column({ type: 'varchar' })
   customer: string;
 
-  @Column({ type: 'json' })
-  items: string[];
+  // @Column({ type: 'json' })
+  // items: string[];
+
+  @OneToMany(() => OrderItem, orderItem => orderItem.order, { cascade: true})
+    items: OrderItem[];
+
     // Nullable non essentiel car j'ai deja des items dans ma base
   @Column({ type: 'varchar' , nullable:true })
   status: string;
