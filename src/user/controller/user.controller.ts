@@ -17,6 +17,8 @@ import { UpdateUserService } from '../use-case/update-user.service';
 import { UserUpdateDto } from '../dto/user-update.dto';
 import { UpdateUserPasswordService } from '../use-case/update-user-password.service';
 import { UserUpdatePasswordDto } from '../dto/user-update-password.dto';
+import { GetOneUserByUsernameService } from '../use-case/get-one-user-by-username.service';
+
 
 //BPO - 05/15/2024 - TP - Creer un nouvel utilisateur (Controlleur)
 @Controller('users')
@@ -30,7 +32,8 @@ export class UserController {
     private readonly getOneUserByIdService: GetOneUserByIdService,
     private readonly getUsersByBornCityService: GetUsersByBornCityService,
     private readonly updateUserService: UpdateUserService,
-    private readonly updateUserPasswordService: UpdateUserPasswordService
+    private readonly updateUserPasswordService: UpdateUserPasswordService,
+    private readonly getOneUserByUsernameService: GetOneUserByUsernameService,
     ) {}
 
   @Post()
@@ -44,7 +47,7 @@ export class UserController {
   }
 
   @Get('/:id')
-  getOneArticleById(@Param('id', ParseIntPipe) id: number) {
+  getOneUserById(@Param('id', ParseIntPipe) id: number) {
     return this.getOneUserByIdService.getOneUserById(id);
   }
 
@@ -70,6 +73,11 @@ export class UserController {
     console.log(data);
     return this.updateUserPasswordService.updateUserPassword(id, data);
     
+  }
+
+  @Get('/by-username/:username')
+  getOneUserByUsername(@Param('username') username: string) {
+    return this.getOneUserByUsernameService.getOneUserByUsername(username);
   }
 }
 

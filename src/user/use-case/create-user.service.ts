@@ -17,6 +17,7 @@ export class CreateUserService {
       ) {}
       
       async createUser(data: UserCreateDto) {
+        console.log(data);
         data.password = await this.bcryptPasswordHasherService.passwordHasher(data.password);
         try {
           return this.userRepository.save(data);

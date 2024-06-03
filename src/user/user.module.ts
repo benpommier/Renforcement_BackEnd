@@ -11,7 +11,7 @@ import { GetOneUserByIdService } from './use-case/get-one-user-by-id.service';
 import { GetUsersByBornCityService } from './use-case/get-users-by-bornCity.service';
 import { UpdateUserService } from './use-case/update-user.service';
 import { UpdateUserPasswordService } from './use-case/update-user-password.service';
-
+import { GetOneUserByUsernameService } from './use-case/get-one-user-by-username.service';
 
 //BPO - 05/15/2024 - TP - Creer un nouvel utilisateur (module)
 @Module({
@@ -24,7 +24,9 @@ import { UpdateUserPasswordService } from './use-case/update-user-password.servi
     GetUsersByBornCityService,
     UpdateUserService,
     UpdateUserPasswordService,
-    BcryptPasswordHasherService
+    BcryptPasswordHasherService,
+    GetOneUserByUsernameService
+
     
     /* {
         provide: CreateUserService,
