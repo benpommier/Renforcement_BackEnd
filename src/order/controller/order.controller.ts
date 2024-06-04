@@ -7,6 +7,7 @@ import {
     ParseIntPipe,
     Post,
     Put,
+    UseGuards,
 } from '@nestjs/common';
   import { CreateOrderService } from '../use-case/create-order.service';
   import { OrderCreateDto } from '../dto/order-create.dto';
@@ -15,6 +16,7 @@ import { OrderModifyShippingDto } from '../dto/order-modify-shipping.dto';
 import { ModifyShippingInOrderService } from '../use-case/modify-shipping-in-order.service';
 import { ModifyInvoiceInOrderService } from '../use-case/modify-invoice-in-order.service';
 import { OrderModifyInvoiceDto } from '../dto/order-modify-invoice.dto';
+import { AuthGuard } from 'src/auth/utils/auth.guard';
   
 //BPO - 05/16/2024 - TP - Creer un nouvel order
 @Controller('orders')
@@ -26,6 +28,8 @@ import { OrderModifyInvoiceDto } from '../dto/order-modify-invoice.dto';
         private readonly modifyInvoiceInOrderService: ModifyInvoiceInOrderService
      ) {}
   
+    @UseGuards(AuthGuard)
+    
     @Post()
     createOrder(@Body() data: OrderCreateDto) {
         console.log(data);

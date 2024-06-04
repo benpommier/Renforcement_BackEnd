@@ -5,6 +5,8 @@ import { AuthController } from './controller/auth.controller';
 import { User } from 'src/user/entity/user.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './utils/auth.guard';
 
 
 //BPO - 06/03/2024 - TP - Authentification
@@ -13,7 +15,7 @@ import { jwtConstants } from './constants';
   JwtModule.register({
     global: true,
     secret: jwtConstants.secret,
-    signOptions: { expiresIn: '60s' },
+    signOptions: { expiresIn: '120s' },
   }),
 
 ],
