@@ -1,0 +1,40 @@
+- Inscription utilisateur -> FAIT
+L'inscription utilisateur fonctionne autant en back qu'en front
+POST - localhost:8000/api/users 
+
+- Connexion utilisateur -> FAIT
+La connexion fonctionne autant en back qu'en front
+POST - localhost:8000/api/auth/login
+
+- Accès aux pages uniquement si l’utilisateur est connecté -> FAIT
+L'accès aux pages fonctionne autant en back qu'en front
+Les pages sont protégées en front et aussi ont la protection en back
+
+- Création de produits avec titre, prix, description, image et couleur -> FAIT
+L'image n'est pas implémentée, on reste sur une image grise de 200x200
+POST - localhost:8000/api/products
+
+- Suppression de produits -> FAIT
+Quand on clique sur un produit et sélectionne delete, le produit se supprime bien
+J'aurais bien voulu faire en sorte que ce bouton ne soit que dispo en tant qu'admin, mais manque de temps
+DELETE - localhost:8000/api/products/:id
+
+- Voir tous les produits -> FAIT
+On voit les produits autant en back qu'en front
+GET - localhost:8000/api/products
+
+- Ajout de l’adresse de livraison
+FONCTIONE UNIQUEMENT en back
+PUT - localhost:8000/api/orders/:id/modify-shipping
+
+
+- Paiement du panier (fictif)
+FONCTIONE UNIQUEMENT en back
+PUT - localhost:8000/api/orders/:id/pay-order
+
+- Ajout d’un produit au panier
+FONCTIONE UNIQUEMENT en back
+Order est enfin reliée à un user et plus à un customerId
+Les vrais produits sont bien ajoutés, les prix sont actualisés
+Vu que ça marche qu'en back, l'id actuel est choisi manuellement dans la fonction de génération d'Order
+POST - localhost:8000/api/products

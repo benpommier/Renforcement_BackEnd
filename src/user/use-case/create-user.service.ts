@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { User } from '../entity/user.entity';
 import { UserCreateDto } from '../dto/user-create.dto';
 import { BcryptPasswordHasherService } from '../utils/bcrypt-password-hasher.service';
-import { PasswordHasherServiceInterface } from '../utils/password-hasher.service.interface';
 
 //BPO - 05/15/2024 - TP - Creer un nouvel utilisateur
 Injectable();

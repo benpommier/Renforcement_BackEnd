@@ -1,9 +1,11 @@
 import { IsNumber } from 'class-validator';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { OrderCreateDto } from '../dto/order-create.dto';
 import { OrderModifyShippingDto } from '../dto/order-modify-shipping.dto';
 import { OrderModifyInvoiceDto } from '../dto/order-modify-invoice.dto';
 import { OrderItem } from './orderItem.entity';
+import { Product } from 'src/product/entity/product.entity';
+import { User } from 'src/user/entity/user.entity';
 
 //BPO - 05/16/2024 - TP - Creer un nouvel order
 @Entity()
@@ -18,41 +20,47 @@ export class Order {
 
 
     //BPO - 05/17/2024 - TP - Création d'order Item
-    constructor(orderCreateDto?: OrderCreateDto) {
-      if (orderCreateDto) {
-        if (orderCreateDto.items.length > 3) {
-          throw new Error("trop d'items");
-        }
-  
-        this.items = this.createOrderItems(orderCreateDto);
+    constructor(createOrderDto? :{customer: User, product: Product, quantity: number}) {
+      if (createOrderDto) {
+        this.items = this.createOrderItems(createOrderDto.product, createOrderDto.quantity);
         this.createdAt = new Date();
         this.updatedAt = new Date();
-        this.customer = 'tetetete';
+        this.customer = createOrderDto.customer;
         this.paidAt = null;
         this.status = Order.CartStatus.Cart;
-        this.total = 10 * orderCreateDto.items.length;
+        this.total = createOrderDto.product.prix * createOrderDto.quantity;
       }
     }
-  
-    private createOrderItems(orderCreateDto: OrderCreateDto): OrderItem[] {
+
+    calculateOrderTotal(order: Order): number {
+      return order.items.reduce((total, item) => {
+        return total + (item.product.prix * item.quantity);
+      }, 0);
+    }
+
+    addOrderItem(product: Product, quantity: number){
+      const orderItem = this.getOrderItemWithProduct(product);
+      if (orderItem) {
+        orderItem.incrementQuantityAndPrice(quantity, product.prix * quantity); 
+      } else {
+        const newOrderItem = new OrderItem({product, quantity});
+        this.items.push(newOrderItem);
+      }
+    }
+
+    private createOrderItems(product: Product, quantity: number): OrderItem[] {
       const orderItemsToCreate = [];
   
-      orderCreateDto.items.map((product) => {
-        const existingOrderItem = this.getOrderItemWithProduct(product);
-        if (existingOrderItem) {
-          existingOrderItem.incrementQuantity();
-        } else {
-          const newOrderItem = new OrderItem(product);
-          orderItemsToCreate.push(newOrderItem);
-        }
-      });
+      const newOrderItem = new OrderItem({product, quantity});
+      console.log("newOrder Item", newOrderItem);
+      orderItemsToCreate.push(newOrderItem);
   
       return orderItemsToCreate;
     }
   
-    private getOrderItemWithProduct(product: string): OrderItem {
+    private getOrderItemWithProduct(product: Product): OrderItem {
       return this.items.find((item) => {
-        return item.product === product;
+        return item.product.id === product.id;
       });
     }
 
@@ -91,8 +99,8 @@ export class Order {
   @Column({ type: 'date' , nullable:true })
   updatedAt: Date;
 
-  @Column({ type: 'varchar' })
-  customer: string;
+  @ManyToOne(() => User, customer => customer.orders)
+  customer: User;
 
   // @Column({ type: 'json' })
   // items: string[];
@@ -104,7 +112,7 @@ export class Order {
   @Column({ type: 'varchar' , nullable:true })
   status: string;
 
-  @Column({ type: 'int' , nullable:true  })
+  @Column({ type: 'decimal' , nullable:true  })
   total: number;
 
   @Column({ type: 'date' , nullable:true })
@@ -124,5 +132,4 @@ export class Order {
 
   @Column({ type: 'date' , nullable:true })
   invoiceAdressSetAt: Date;
-
 }

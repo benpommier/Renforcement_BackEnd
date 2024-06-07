@@ -1,11 +1,12 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty , IsNumber} from 'class-validator';
 import { OrderItem } from '../entity/orderItem.entity';
+import { Product } from 'src/product/entity/product.entity';
 
 //BPO - 05/16/2024 - TP - Creer un nouvel order
 export class OrderCreateDto {
-  @IsNotEmpty({ message: 'Le client doit avoir un nom' })
-  customer: string;
+  @IsNumber()
+  productId: number;
 
-  @IsNotEmpty({ message: 'La liste des produits ne peut pas être vide' })
-  items: string[];
+  @IsNumber()
+  quantity: number;
 }
